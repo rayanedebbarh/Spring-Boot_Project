@@ -1,4 +1,4 @@
-package business;
+package Service;
 
 import data.PaperRepository;
 import model.Paper;
