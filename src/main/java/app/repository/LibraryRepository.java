@@ -4,9 +4,9 @@ import app.model.Library;
 import java.util.List;
 
 public interface LibraryRepository {
-    void save(Library library);
-    void update(Library library);
-    void delete(int id);
+    Library save(Library library);           // Changed: now returns Library
+    Library update(Library library);         // Changed: now returns Library
+    boolean delete(int id);                  // Changed: now returns boolean
     Library findById(int id);
     long count();
     List<Library> findAllByOrderByName();

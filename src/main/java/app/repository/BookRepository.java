@@ -4,9 +4,9 @@ import app.model.Book;
 import java.util.List;
 
 public interface BookRepository {
-    void save(Book book);
-    void update(Book book);
-    void delete(int id);
+    Book save(Book book);                    // Changed: now returns Book
+    Book update(Book book);                  // Changed: now returns Book
+    boolean delete(int id);                  // Changed: now returns boolean
     Book findById(int id);
     long count();
     List<Book> findAllByOrderByTitle();
