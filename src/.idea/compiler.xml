@@ -6,13 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="SoftwareCollaborationActivity1" />
+        <module name="CSC450-Activity4-Containers" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="SoftwareCollaborationActivity1" options="-parameters" />
+      <module name="CSC450-Activity4-Containers" options="-parameters" />
     </option>
   </component>
 </project>
