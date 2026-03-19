@@ -1,14 +1,16 @@
 package app.repository;
 
 import app.model.Library;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import java.util.List;
 
-public interface LibraryRepository {
-    Library save(Library library);           // Changed: now returns Library
-    Library update(Library library);         // Changed: now returns Library
-    boolean delete(int id);                  // Changed: now returns boolean
-    Library findById(int id);
-    long count();
-    List<Library> findAllByOrderByName();
+@Repository
+public interface LibraryRepository extends JpaRepository<Library, Integer> {
+    // JpaRepository provides: save, findById, findAll, delete, count, etc.
+
+    // Custom query methods
     List<Library> findByCity(String city);
+    List<Library> findAllByOrderByNameAsc();
+    List<Library> findAllByOrderByCityAsc();
 }

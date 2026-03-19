@@ -18,24 +18,15 @@ public class GroqLlmService implements LlmService {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
-
-    private static final String GROQ_URL =
-            "https://api.groq.com/openai/v1/chat/completions";
+    private static final String GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
     @Override
     public String findIsbn(String title, String author, int year) {
         String prompt = "For the book get me the isbn-13: " + title +
-                " by " + author + " (" + year + ")." +
-                " Bring me only the number no additional text";
+                " by " + author + " (" + year + "). Bring me only the number no additional text";
 
-        Map<String, Object> message = Map.of(
-                "role", "user",
-                "content", prompt
-        );
-        Map<String, Object> requestBody = Map.of(
-                "model", "llama-3.3-70b-versatile",
-                "messages", List.of(message)
-        );
+        Map<String, Object> message = Map.of("role", "user", "content", prompt);
+        Map<String, Object> requestBody = Map.of("model", "llama-3.3-70b-versatile", "messages", List.of(message));
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -43,18 +34,9 @@ public class GroqLlmService implements LlmService {
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
 
         try {
-            ResponseEntity<String> response = restTemplate.postForEntity(
-                    GROQ_URL, request, String.class
-            );
-
+            ResponseEntity<String> response = restTemplate.postForEntity(GROQ_URL, request, String.class);
             JsonNode root = objectMapper.readTree(response.getBody());
-            return root.path("choices")
-                    .get(0)
-                    .path("message")
-                    .path("content")
-                    .asText()
-                    .trim();
-
+            return root.path("choices").get(0).path("message").path("content").asText().trim();
         } catch (Exception e) {
             return "Error retrieving ISBN: " + e.getMessage();
         }

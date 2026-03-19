@@ -1,59 +1,85 @@
 package app.service;
 
-import org.springframework.stereotype.Service;
+import app.model.Book;
 import app.model.Library;
+import app.repository.BookRepository;
 import app.repository.LibraryRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class LibraryService {
+    private final LibraryRepository libraryRepository;
+    private final BookRepository bookRepository;
 
-    private final LibraryRepository repo;
-
-    public LibraryService(LibraryRepository repo) {
-        this.repo = repo;
+    public LibraryService(LibraryRepository libraryRepository, BookRepository bookRepository) {
+        this.libraryRepository = libraryRepository;
+        this.bookRepository = bookRepository;
     }
 
     public Library save(Library library) {
         validateLibrary(library);
-        return repo.save(library);
+        return libraryRepository.save(library);
     }
 
     public Library update(Library library) {
         validateLibrary(library);
-        Library updated = repo.update(library);
-        if (updated == null) {
+        if (!libraryRepository.existsById(library.getId())) {
             throw new IllegalArgumentException("Library with ID " + library.getId() + " not found");
         }
-        return updated;
+        return libraryRepository.save(library);
     }
 
     public boolean delete(int id) {
-        return repo.delete(id);
+        if (libraryRepository.existsById(id)) {
+            libraryRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     public Library findById(int id) {
-        Library library = repo.findById(id);
-        if (library == null) {
-            throw new IllegalArgumentException("Library with ID " + id + " not found");
-        }
-        return library;
+        return libraryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Library with ID " + id + " not found"));
     }
 
     public long count() {
-        return repo.count();
+        return libraryRepository.count();
     }
 
     public List<Library> findAllSorted() {
-        return repo.findAllByOrderByName();
+        return libraryRepository.findAllByOrderByNameAsc();
+    }
+
+    public List<Library> findAllByOrderByCityAsc() {
+        return libraryRepository.findAllByOrderByCityAsc();
     }
 
     public List<Library> findByCity(String city) {
         if (city == null || city.trim().isEmpty()) {
             throw new IllegalArgumentException("City name cannot be empty");
         }
-        return repo.findByCity(city);
+        return libraryRepository.findByCity(city);
+    }
+
+    // Relationship management methods
+    public Library addBookToLibrary(int libraryId, int bookId) {
+        Library library = findById(libraryId);
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException("Book not found with id: " + bookId));
+
+        library.addBook(book);
+        return libraryRepository.save(library);
+    }
+
+    public Library removeBookFromLibrary(int libraryId, int bookId) {
+        Library library = findById(libraryId);
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException("Book not found with id: " + bookId));
+
+        library.removeBook(book);
+        return libraryRepository.save(library);
     }
 
     private void validateLibrary(Library library) {
