@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--
+AI Usage Documentation:
+- Claude AI (Anthropic) assisted with Thymeleaf template syntax and HTML structure
+-->
+<head>
+  <meta charset="UTF-8">
+  <title>Library Management System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    .nav-links {
+      list-style: none;
+      padding: 0;
+    }
+    .nav-links li {
+      margin: 15px 0;
+    }
+    .nav-links a {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    .nav-links a:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+<h1>Library Management System</h1>
+<p>Welcome to the Library Management System. Choose an option below:</p>
+
+<ul class="nav-links">
+  <li><a th:href="@{/web/books}">📚 Manage Books</a></li>
+  <li><a th:href="@{/web/libraries}">🏛️ Manage Libraries</a></li>
+  <li><a th:href="@{/web/relationships}">🔗 Manage Book-Library Relationships</a></li>
+</ul>
+
+<p><a th:href="@{/swagger-ui/index.html}">View API Documentation (Swagger)</a></p>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--
+AI Usage Documentation:
+- Claude AI (Anthropic) assisted with Thymeleaf iteration syntax and table structure
+-->
+<head>
+  <meta charset="UTF-8">
+  <title>Books List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+    .btn {
+      padding: 5px 10px;
+      text-decoration: none;
+      border-radius: 3px;
+      margin-right: 5px;
+    }
+    .btn-edit {
+      background-color: #28a745;
+      color: white;
+    }
+    .btn-delete {
+      background-color: #dc3545;
+      color: white;
+    }
+    .btn-new {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+    }
+    .btn-home {
+      background-color: #6c757d;
+      color: white;
+      padding: 10px 20px;
+    }
+  </style>
+</head>
+<body>
+<h1>Books List</h1>
+
+<div>
+  <a th:href="@{/web/books/new}" class="btn btn-new">➕ Add New Book</a>
+  <a th:href="@{/web/}" class="btn btn-home">🏠 Home</a>
+</div>
+
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Title</th>
+    <th>Author</th>
+    <th>Year</th>
+    <th>Library</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="book : ${books}">
+    <td th:text="${book.id}"></td>
+    <td th:text="${book.title}"></td>
+    <td th:text="${book.author}"></td>
+    <td th:text="${book.year}"></td>
+    <td th:text="${book.library != null ? book.library.name : 'None'}"></td>
+    <td>
+      <a th:href="@{/web/books/edit/{id}(id=${book.id})}" class="btn btn-edit">Edit</a>
+      <a th:href="@{/web/books/delete/{id}(id=${book.id})}"
+         class="btn btn-delete"
+         onclick="return confirm('Are you sure you want to delete this book?')">Delete</a>
+    </td>
+  </tr>
+  <tr th:if="${#lists.isEmpty(books)}">
+    <td colspan="6">No books found. Add a new book to get started!</td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

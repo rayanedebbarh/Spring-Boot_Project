@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--
+AI Usage Documentation:
+- Claude AI (Anthropic) assisted with:
+  1. Thymeleaf conditional rendering logic
+  2. Form handling for relationship management
+  3. Dynamic dropdown population from model data
+-->
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Book-Library Relationships</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+    .section {
+      background: #f4f4f4;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+    }
+    h2 {
+      color: #007bff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    select {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-add {
+      background-color: #28a745;
+      color: white;
+    }
+    .btn-remove {
+      background-color: #dc3545;
+      color: white;
+    }
+    .btn-home {
+      background-color: #6c757d;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+<h1>Manage Book-Library Relationships</h1>
+
+<div>
+  <a th:href="@{/web/}" class="btn btn-home">🏠 Home</a>
+</div>
+
+<!-- Add Book to Library Section -->
+<div class="section">
+  <h2>➕ Add Book to Library</h2>
+  <form th:action="@{/web/relationships/add}" method="post">
+    <div class="form-group">
+      <label for="book">Select Book:</label>
+      <select id="book" name="bookId" required>
+        <option value="">-- Choose a Book --</option>
+        <option th:each="book : ${books}"
+                th:value="${book.id}"
+                th:text="${book.title + ' by ' + book.author + ' (' + book.year + ')'}"
+                th:disabled="${book.library != null}">
+        </option>
+      </select>
+      <small>Note: Books already assigned to a library are disabled</small>
+    </div>
+
+    <div class="form-group">
+      <label for="library">Select Library:</label>
+      <select id="library" name="libraryId" required>
+        <option value="">-- Choose a Library --</option>
+        <option th:each="lib : ${libraries}"
+                th:value="${lib.id}"
+                th:text="${lib.name + ' (' + lib.city + ')'}">
+        </option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-add">Add Book to Library</button>
+  </form>
+</div>
+
+<!-- Current Relationships Section -->
+<div class="section">
+  <h2>📚 Current Book-Library Assignments</h2>
+  <table>
+    <thead>
+    <tr>
+      <th>Book ID</th>
+      <th>Book Title</th>
+      <th>Author</th>
+      <th>Year</th>
+      <th>Assigned Library</th>
+      <th>Library City</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}" th:if="${book.library != null}">
+      <td th:text="${book.id}"></td>
+      <td th:text="${book.title}"></td>
+      <td th:text="${book.author}"></td>
+      <td th:text="${book.year}"></td>
+      <td th:text="${book.library.name}"></td>
+      <td th:text="${book.library.city}"></td>
+      <td>
+        <form th:action="@{/web/relationships/remove}" method="post" style="display:inline;">
+          <input type="hidden" name="bookId" th:value="${book.id}" />
+          <button type="submit" class="btn btn-remove"
+                  onclick="return confirm('Remove this book from its library?')">
+            Remove
+          </button>
+        </form>
+      </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(books) || !books.?[library != null].isEmpty() == false}">
+      <td colspan="7">No book-library relationships exist yet. Use the form above to create one!</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Unassigned Books Section -->
+<div class="section">
+  <h2>📖 Books Not Assigned to Any Library</h2>
+  <table>
+    <thead>
+    <tr>
+      <th>Book ID</th>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Year</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}" th:if="${book.library == null}">
+      <td th:text="${book.id}"></td>
+      <td th:text="${book.title}"></td>
+      <td th:text="${book.author}"></td>
+      <td th:text="${book.year}"></td>
+    </tr>
+    <tr th:if="${books.?[library == null].isEmpty()}">
+      <td colspan="4">All books are assigned to libraries!</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--
+AI Usage Documentation:
+- Claude AI (Anthropic) assisted with Thymeleaf form binding for library entity
+-->
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${library.id == null ? 'Add New Library' : 'Edit Library'}">Library Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        form {
+            background: #f4f4f4;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-save {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-cancel {
+            background-color: #6c757d;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<h1 th:text="${library.id == null ? 'Add New Library' : 'Edit Library'}">Library Form</h1>
+
+<form th:action="@{/web/libraries/save}" method="post" th:object="${library}">
+    <input type="hidden" th:field="*{id}" />
+
+    <div class="form-group">
+        <label for="name">Library Name:</label>
+        <input type="text" id="name" th:field="*{name}" required />
+    </div>
+
+    <div class="form-group">
+        <label for="city">City:</label>
+        <input type="text" id="city" th:field="*{city}" required />
+    </div>
+
+    <button type="submit" class="btn btn-save">💾 Save</button>
+    <a th:href="@{/web/libraries}" class="btn btn-cancel">❌ Cancel</a>
+</form>
+</body>
+</html>
